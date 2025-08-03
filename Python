@@ -1,0 +1,56 @@
+const inputBox = document.getElementById("input-box");
+const listContainer = document.getElementById("list-container");
+
+function addTask() {
+    if (inputBox.value === '') {
+        alert("Kamu harus menuliskan sesuatu!");
+    } else {
+        let li = document.createElement("li");
+        // Isi elemen list dengan teks dari kotak input
+        li.innerHTML = inputBox.value;
+        // Tambahkan elemen list ke dalam kontainer daftar
+        listContainer.appendChild(li);
+
+        // Buat tombol hapus (elemen <span>)
+        let span = document.createElement("span");
+        // Isi span dengan ikon 'x'
+        span.innerHTML = "\u00d7"; 
+        // Tambahkan tombol hapus ke dalam elemen list
+        li.appendChild(span);
+    }
+    // Kosongkan kembali kotak input setelah tugas ditambahkan
+    inputBox.value = "";
+    // Simpan data ke browser
+    saveData();
+}
+
+// Menambahkan 'event listener' ke kontainer daftar
+listContainer.addEventListener("click", function(e) {
+    // Jika yang di-klik adalah elemen LI (tugasnya)
+    if (e.target.tagName === "LI") {
+        // Toggle class 'checked' (tambah jika tidak ada, hapus jika ada)
+        e.target.classList.toggle("checked");
+        // Simpan data ke browser
+        saveData();
+    }
+    // Jika yang di-klik adalah elemen SPAN (tombol hapus)
+    else if (e.target.tagName === "SPAN") {
+        // Hapus elemen induknya, yaitu LI (tugasnya)
+        e.target.parentElement.remove();
+        // Simpan data ke browser
+        saveData();
+    }
+}, false);
+
+// Fungsi untuk menyimpan data ke Local Storage browser
+function saveData() {
+    localStorage.setItem("data", listContainer.innerHTML);
+}
+
+// Fungsi untuk menampilkan data yang sudah tersimpan
+function showTask() {
+    listContainer.innerHTML = localStorage.getItem("data");
+}
+
+// Panggil fungsi showTask() saat halaman dimuat
+showTask();
